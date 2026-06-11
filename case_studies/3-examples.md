@@ -71,7 +71,3 @@ What I did not have language for at the time was that this was design. It was se
 The instinct has never changed. See the whole system. Map the dependencies before they become problems. Give people the tools and the clarity to succeed without waiting on you. Make the invisible visible.
 
 It started in a stockroom. It has carried me everywhere since.
-
----
-
-*These essays were written to accompany the code examples in this repository. The technical work and the thinking behind it are the same work — one expressed in Python and Swift, the other in prose.*
