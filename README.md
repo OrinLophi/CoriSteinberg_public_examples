@@ -14,6 +14,7 @@ The platform I built included:
 - **Templated automation projects** generated via CLI tooling — engineers bootstrapped new projects from versioned templates rather than starting from scratch
 - **Structured telemetry (RunData)** embedded within scripts themselves, enabling consistent measurement and quality tracking across all automations
 - **AI-powered screenshot analysis** integrated into the assessment data pipeline, surfacing results through the API for the first time
+- **Case studies** — three essays on systems thinking and design.
 
 ---
 
@@ -34,7 +35,7 @@ Key design decisions:
 
 ---
 
-### `models.py` + `workflow.py` (Android / Python Appium)
+### `models.py` + `workflow.py` + `standard_functions.py` (Android / Python Appium)
 **Cross-platform Android automation framework — shared base library and workflow template**
 
 `models.py` is the shared base library imported by all Android automation scripts. It provides:
