@@ -14,7 +14,7 @@ The platform I built included:
 - **Templated automation projects** generated via CLI tooling — engineers bootstrapped new projects from versioned templates rather than starting from scratch
 - **Structured telemetry (RunData)** embedded within scripts themselves, enabling consistent measurement and quality tracking across all automations
 - **AI-powered screenshot analysis** integrated into the assessment data pipeline, surfacing results through the API for the first time
-- **Case studies** — three essays on systems thinking and design.
+- **Case studies** — three essays on systems thinking and design, written in prose rather than code, available in the `case-studies` folder
 
 ---
 
@@ -35,17 +35,22 @@ Key design decisions:
 
 ---
 
-### `models.py` + `workflow.py` + `standard_functions.py` (Android / Python Appium)
-**Cross-platform Android automation framework — shared base library and workflow template**
+### `models.py` + `nav.py` + `functions.py` + `mail_import.py` (Android / Python Appium)
+**Cross-platform Android automation framework — shared base library, workflow template, and utility modules**
 
 `models.py` is the shared base library imported by all Android automation scripts. It provides:
-- `RunData` — a typed dataclass capturing login success, error codes, actions completed, and platform metadata. Written to the platform via `driver.log_event()` at session end, enabling consistent measurement across all automations
-- `ErrorCodes` — a standardized enum taxonomy covering all known failure states, with human-readable descriptions
-- Reusable element interaction utilities: `wait_for`, `wait_exist`, `tap_if_exists`, `force_tap_elem`, `scroll`, `permission`, `handle_chrome`
+- `RunData` — a typed dataclass capturing login success, error codes, navigation type, and platform metadata. Written to the platform via `driver.log_event()` at session end, enabling consistent measurement across all automations
+- `ErrorCodes` — a standardized enum taxonomy covering all known failure states
+- `NavigationType` — an enum defining supported automation modes: Appium, JSNav, XCTest, and Guided
+
+`functions.py` contains all reusable element interaction utilities shared across automations:
+- `wait_for`, `wait_exist`, `tap_if_exists`, `force_tap_elem`, `scroll`, `permission`, `handle_chrome`
 - Login validation logic including `login_success_fallback` — XML tree traversal with keyword matching for cases where primary element detection fails
 - Credential loading via `load_creds` — dynamic config ingestion supporting multiple data structures
 
-`workflow.py` is the automation template. Engineers filled in `{{CODE}}` with app-specific interaction logic. Everything else — session launch, error handling, RunData logging, session teardown — was inherited from the framework.
+`nav.py` is the automation template. Engineers filled in `{{CODE}}` with app-specific interaction logic. Everything else — session launch, error handling, RunData logging, and session teardown — was inherited from the framework.
+
+`mail_import.py` provides email extraction utilities for automations requiring OTP or magic link authentication: `retrieve_url` for flexible API requests with urllib3 fallback, `pull_data` for regex-based extraction, and `url_link` for retrieving authentication links from a Mailinator inbox at runtime.
 
 ---
 
