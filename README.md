@@ -89,3 +89,21 @@ These files are sanitized samples from production work at NowSecure, a mobile ap
 ---
 
 *More examples available on request. Additional tooling — including data pipeline infrastructure, GraphQL extraction scripts, and AI prompt engineering frameworks — available for discussion in context.*
+
+### `runData_Pull.py` (Data Pipeline / GraphQL Extraction)
+**Assessment data pipeline — GraphQL extraction, log parsing, and structured CSV output**
+
+This script is the downstream companion to the automation framework. Where `models.py` defines `RunData` and the automation templates write it into each assessment via `driver.log_event()`, `runData_Pull.py` is what retrieved that telemetry at scale — extracting it from the platform, parsing it out of raw event logs, and producing structured datasets for analysis.
+
+The pipeline supports multiple modes via CLI flags:
+
+- **Date-range extraction** — pull assessment references by status (completed or failed) within a configurable time window
+- **Full assessment enrichment** — for each ref, pull metadata, event log messages, and config data in a second pass
+- **RunData extraction** — regex-based parsing of event logs to isolate `login_success`, `total_actions`, `actions_completed`, and error codes written by the automation templates
+- **App list mode** — export full application config data including credential structure, automation script references, and assessment history
+- **Resumable runs** — inbound `.txt` files allow the pipeline to resume from a previous checkpoint without re-querying the API
+
+Key design decisions:
+- Two-pass architecture mirrors the approach in `screenshotanalysis.py`: pull refs first, enrich in a second loop — keeps API load manageable across large datasets
+- All output is timestamped JSON and CSV — designed for daily analysis runs
+- `RunData` fields extracted here (`login_success`, `total_actions`, `actions_completed`) are the same fields defined in `models.py` and populated by the automation templates — this script closes the loop between what the automations write and what the data team could measure
